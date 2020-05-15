@@ -2,7 +2,7 @@
 // store easy, medium , advanced
 let easy_level = 10;
 let medium_level = 25;
-let advanced_level = 40;
+let advanced_level = 50;
 const field_storage_level = 'selected_level';
 
 if (localStorage.getItem(field_storage_level)==null || localStorage.getItem(field_storage_level)== undefined){
@@ -59,7 +59,16 @@ let $kata = new Vue({
                url : API_Random_Word+level_selected
            }).request($response=>{
                let $obj = JSON.parse($response);
-               this.word_to_display = $obj.join(" ")
+               
+               // insert div to word, so we can mark the word
+               let $obj_modif = '';
+               for(let i = 0; i< $obj.length; i++){
+                   let element_word = `<word id="word_${i}">${$obj[i]}</word> `;
+                   $obj_modif += element_word;
+               }
+
+               this.word_to_display = $obj_modif
+
                this.loading = false;
                $word_auto = $obj;
                
@@ -137,41 +146,47 @@ let user_input = new Vue({
         }
         ,
         detectTyping: function(e){
-           
-            if ($index_array==$word_auto.length){
-                this.stopStopWatch();
-                return;
-            }
-
-            if ($stopwatch_start==false){
-                $stopwatch_start = true;
-                this.runStopWatch()
-            }
+            try{
+                // find element of word
+                document.getElementById('word_'+$index_array).style.color = "#DC7633";
             
-            $kata_will_be_compare = $word_auto[$index_array];
+                if ($index_array==$word_auto.length){
+                    this.stopStopWatch();
+                    return;
+                }
 
-            if (e.key===' ' && this.user_text.trim() === ''){
-                return;
-            }else{
-                if ($kata_will_be_compare===this.user_text.trim()){
+                if ($stopwatch_start==false){
+                    $stopwatch_start = true;
+                    this.runStopWatch()
+                }
                 
-                    if (e.key===' ' || e.key==='Enter'){
-                        $true_word.push(this.user_text)
-                        this.runTable(this.user_text,true)
+                $kata_will_be_compare = $word_auto[$index_array];
+
+                if (e.key===' ' && this.user_text.trim() === ''){
+                    return;
+                }else{
+                    if ($kata_will_be_compare===this.user_text.trim()){
+                    
+                        if (e.key===' ' || e.key==='Enter'){
+                            $true_word.push(this.user_text)
+                            this.runTable(this.user_text,true)
+                            this.runScoreTrueFalse()
+                            document.getElementById('word_'+$index_array).style.color = "#00b894";
+                            $index_array++;
+                            this.user_text=null
+                        }
+        
+                    }else if(e.key===' ' || e.key==='Enter'){
+                        $false_word.push(this.user_text)
+                        this.runTable(this.user_text,false)
                         this.runScoreTrueFalse()
-    
+        
                         $index_array++;
                         this.user_text=null
                     }
-    
-                }else if(e.key===' ' || e.key==='Enter'){
-                    $false_word.push(this.user_text)
-                    this.runTable(this.user_text,false)
-                    this.runScoreTrueFalse()
-    
-                    $index_array++;
-                    this.user_text=null
                 }
+            }catch(e){
+                console.log('Typing Speed Test - '+e);
             }
         },
         runTable: function(word=null,type=null){
@@ -217,8 +232,18 @@ function setTitle(level){
     }else if (level ==25){
         level = 'Medium'
     }
-    else if (level ==40){
+    else if (level == 50){
         level = 'Advanced'
     }
     document.title = `Level ${level.toUpperCase()} | Typing-Speed-Test `
+}
+
+
+function showInfo(){
+    Swal.fire({
+        title: 'How to use ?',
+        text: 'Press enter or space for confirmation your word.',
+        icon: 'info',
+        confirmButtonText: 'OK'
+    })
 }

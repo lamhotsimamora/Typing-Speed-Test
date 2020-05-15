@@ -19,11 +19,13 @@
     
     <div class="container" id="kata" v-cloak>
         <div class="alert alert-primary" role="alert">
-              <div v-if="loading" class="spinner-border text-primary" role="status">
-                <span class="sr-only">Loading...</span>
-              </div>
-              <h4><hr>{{ word_to_display }}<hr></h4>
-
+              <h4>
+                <hr>
+                <div v-if="loading" class="spinner-border text-primary" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                <div v-html="word_to_display" class="text-justify" style="color: black;"></div>
+                <hr></h4>
               <small>count word : {{ count_word }}</small>
         </div>
         <hr>
@@ -47,13 +49,13 @@
         </div>
        <hr>
        <button type="button" @click="reload" class="btn btn-primary btn-sm">Restart</button>
+       <button type="button"  onclick="showInfo()" class="btn btn-secondary btn-sm">?</button>
        <hr>
         <span class="badge badge-pill badge-dark d-flex justify-content-center">
             <h5 class="">{{ stopwatch }}</h5>
         </span> 
         <hr>
        
-
         <div class="table-responsive">
             <h5>Result  : <strong style="color: grey;">
                 {{ result_score }}
