@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing-Speed-Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://www.cdn.lamhotsimamora.com/jnet/"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+    [v-cloak] {
+    display: none;
+    }
+    </style> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+</head>
+<body>
+    <br>
+    
+    <div class="container" id="kata" v-cloak>
+        <div class="alert alert-primary" role="alert">
+              <div v-if="loading" class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+              <h4><hr>{{ word_to_display }}<hr></h4>
+
+              <small>count word : {{ count_word }}</small>
+        </div>
+        <hr>
+
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <label class="input-group-text" for="inputGroupSelect01">Level</label>
+            </div>
+            <select id="level_selected"  @change="selectLevel" class="custom-select" v-model="level" id="inputGroupSelect01">
+              <option :value="level.value" v-for="level in data_level">{{level.level}}</option>
+            </select>
+          </div>
+    </div>
+
+    <div class="container" id="user_input" v-cloak>
+        <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Type Here...</span>
+            </div>
+            <textarea ref="user_text" :readonly="readonly" rows="1" class="form-control" @keyup="detectTyping" v-model="user_text" aria-label="With textarea"></textarea>
+        </div>
+       <hr>
+       <button type="button" @click="reload" class="btn btn-primary btn-sm">Restart</button>
+       <hr>
+        <span class="badge badge-pill badge-dark d-flex justify-content-center">
+            <h5 class="">{{ stopwatch }}</h5>
+        </span> 
+        <hr>
+       
+
+        <div class="table-responsive">
+            <h5>Result  : <strong style="color: grey;">
+                {{ result_score }}
+            </strong></h5>
+            <h5>Average : <strong style="color: grey;">
+                {{ average_score }}
+            </strong></h5>
+            <table class="table">
+                <table class="table table-hover table-secondary">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Correct - <strong style="color: green">{{ true_point }}</strong></th>
+                        <th scope="col">Wrong - <strong style="color: red">{{ false_point }}</strong></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(true_false_word,i) in data_true_false_word">
+                            <th scope="row">{{ i++ }}</th>
+                            <td class="bg-success">{{ true_false_word.true }}</td>
+                            <td class="bg-danger">{{ true_false_word.false }}</td>
+                        </tr>
+                    </tbody>
+                  </table>
+            </table>
+          </div>
+
+    </div>
+
+    <script src="init.js"></script>
+    <script src="app.js"></script>
+
+</body>
+</html>
